@@ -25,3 +25,5 @@
 ###< symfony/asset-mapper ###
 
 .idea/
+
+.env

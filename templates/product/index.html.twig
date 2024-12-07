@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!
+{% endblock %}
+
+{% block body %}
+    <h1>Liste des produits</h1>
+    {% for p in products %}
+        <p>{{ p.name }}</p>
+        <a href="{{ path('app_product_show', {id: p.id}) }}">Voir</a>
+
+    {% else %}
+        <p>Aucun produit</p>
+    {% endfor %}
+    {% if is_granted('ROLE_ADMIN') %}
+
+
+
+        { <h2>Ajouter un produit</h2> }
+        {# {{ form(ajout_produit) }} #}
+    {% endif %}
+
+
+{% endblock %}

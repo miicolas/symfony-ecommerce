@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Account Information{% endblock %}
+
+{% block body %}
+    <h1>Account Information</h1>
+
+    {% if app.user %}
+        <p><strong>First name:</strong> {{ app.user.firstName }}</p>
+        <p><strong>Last name:</strong> {{ app.user.lastName }}</p>
+        <p><strong>Email:</strong> {{ app.user.email }}</p>
+        <p><strong>Roles:</strong> {{ app.user.roles | join(', ') }}</p>
+
+        <a href="{{ path('app_logout') }}">Logout</a>
+    {% else %}
+        <p>You are not logged in.</p>
+        <a href="{{ path('app_login') }}">Login</a>
+    {% endif %}
+{% endblock %}
