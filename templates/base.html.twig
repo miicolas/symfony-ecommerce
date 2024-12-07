@@ -10,16 +10,32 @@
 
     {% block javascripts %}
         {% block importmap %}{{ importmap('app') }}{% endblock %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const toasts = document.querySelectorAll('.toast');
+                toasts.forEach(toast => {
+                    setTimeout(() => {
+                        toast.classList.add('opacity-0');
+                        setTimeout(() => toast.remove(), 500);
+                    }, 3000);
+                });
+            });
+        </script>
     {% endblock %}
 </head>
 <body class="bg-slate-50 min-h-screen font-sans">
 <nav class="bg-white border-b border-slate-200">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <ul class="flex h-16 items-center justify-end space-x-8">
+    <div class="flex justify-between max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 items-center">
+        <a href="{{ path('app_product')}}">
+            <h1 class="flex h-16 items-center space-x-8 text-xl font-bold">ShopIt</h1>
+        </a>
+        <ul class="flex h-16 items-center space-x-8">
             {% if app.user is not null %}
                 <li class="text-slate-600">
                     Bienvenue
+                    <a href="{{ path('app_account')}}">
                     <span class="text-slate-900">{{ app.user.firstName }} {{ app.user.lastName }}</span>
+                    </a>
                 </li>
                 <li>
                     <a href="{{ path('app_logout') }}"
@@ -39,6 +55,20 @@
     </div>
 </nav>
 
-{% block body %}{% endblock %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+    {% block body %}{% endblock %}
+</div>
+
+<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="toast bg-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-100 border border-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-400 text-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-700 px-4 py-3 rounded relative mb-4 shadow-lg transition-opacity duration-300" role="alert">
+                <strong class="font-bold">{{ (label == "success" ? 'Succès' : (label == 'error' ? 'Erreur' : label))|capitalize }} !</strong>
+                <span class="block sm:inline">{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
 </body>
 </html>

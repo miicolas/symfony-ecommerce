@@ -32,6 +32,9 @@ class Cart
     #[ORM\Column]
     private ?bool $is_paid = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?float $amount_paid = null;
+
     public function __construct()
     {
         $this->cartContents = new ArrayCollection();
@@ -104,6 +107,28 @@ class Cart
     public function setPurchaseDate(?\DateTimeInterface $purchase_date): static
     {
         $this->purchase_date = $purchase_date;
+
+        return $this;
+    }
+
+    public function getTotal(): float
+    {
+        $total = 0;
+        foreach ($this->cartContents as $cartContent) {
+            $total += $cartContent->getProduct()->getPrice() * $cartContent->getQuantity();
+        }
+
+        return $total;
+    }
+
+    public function getAmountPaid(): ?float
+    {
+        return $this->amount_paid;
+    }
+
+    public function setAmountPaid(?float $amount_paid): static
+    {
+        $this->amount_paid = $amount_paid;
 
         return $this;
     }

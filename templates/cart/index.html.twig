@@ -23,12 +23,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {# Liste des produits #}
                 <div class="lg:col-span-2 space-y-4">
-                    {% for item in cart %}
+                    {% for item in cart.getCartContents() %}
                         <div class="bg-white rounded-xl shadow-sm p-4 flex items-center space-x-4">
                             {# Image du produit #}
                             <div class="w-24 h-24 flex-shrink-0 bg-slate-100 rounded-lg">
-                                {% if item.product.image is defined and item.product.image %}
-                                    <img src="{{ item.product.image }}"
+                                {% if item.product.photo is defined and item.product.photo %}
+                                    <img src="{{ item.product.photo }}?random={{ random() }}"
                                          alt="{{ item.product.name }}"
                                          class="w-full h-full object-cover rounded-lg">
                                 {% else %}
@@ -46,14 +46,21 @@
                                 <p class="text-slate-600">{{ item.product.price|number_format(2, ',', ' ') }} €</p>
                             </div>
 
+                            {# total de la ligne #}
+                            <div class="text-right w-24">
+                                <p class="text-slate-600">Sous-total: {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €</p>
+                            </div>
+
                             {# Quantité #}
-                            <div class="flex items-center space-x-2">
-                                <form method="post" action="{{ path('app_cart_update', {id: item.product.id}) }}" class="flex items-center">
+                            <div class="flex align-middle items-center space-x-2">
+                                <form method="post" action="{{ path('app_cart_decrease', {cartContentId: item.id}) }}" class="flex items-center m-0">
                                     <button type="submit" name="action" value="decrease"
                                             class="w-8 h-8 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50">
                                         -
                                     </button>
+                                </form>
                                     <span class="w-12 text-center">{{ item.quantity }}</span>
+                                    <form method="post" action="{{ path('app_cart_increase', {cartContentId: item.id}) }}" class="flex items-center m-0">
                                     <button type="submit" name="action" value="increase"
                                             class="w-8 h-8 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50">
                                         +
@@ -63,14 +70,14 @@
 
 
                             {# Bouton supprimer #}
-                            {#<form method="post" action="{{ path('app_cart_remove', {id: item.product.id}) }}">
+                            <form method="post" action="{{ path('app_cart_remove', {cartContentId: item.id}) }}" class="my-0">
                                 <button type="submit"
                                         class="text-slate-400 hover:text-red-600 transition-colors duration-200">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
                                 </button>
-                            </form>#}
+                            </form>
                         </div>
                     {% endfor %}
                 </div>
@@ -80,14 +87,19 @@
                     <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
                         <h2 class="text-lg font-medium text-slate-900 mb-4">Récapitulatif</h2>
 
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-slate-600">Total</span>
+                            <span class="text-slate-900">{{ cart.getTotal()|number_format(2, ',', ' ') }} €</span>
+                        </div>
+
                         <div class="space-y-4">
 
-                            {#<form method="post" action="{{ path('app_checkout') }}" class="mt-6">
+                            <form method="post" action="{{ path('app_cart_checkout') }}" class="mt-6">
                                 <button type="submit"
                                         class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
                                     Procéder au paiement
                                 </button>
-                            </form>#}
+                            </form>
                         </div>
                     </div>
                 </div>

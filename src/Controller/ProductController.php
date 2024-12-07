@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ProductController extends AbstractController
 {
-    #[Route('/product', name: 'app_product')]
+    #[Route('/', name: 'app_product')]
     public function index(EntityManagerInterface $em): Response
     {
         $products = $em->getRepository(Product::class)->findAll();
