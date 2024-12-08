@@ -19,8 +19,9 @@ class AccountController extends AbstractController
          * @var User $user
          */
         $user = $this->getUser();
-        // Assurez-vous que l'utilisateur est connecté
         if (!$user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à votre compte');
+
             return $this->redirectToRoute('app_login');
         }
 

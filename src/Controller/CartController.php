@@ -89,11 +89,10 @@ class CartController extends AbstractController
 
         $em->flush();
 
-        $this->addFlash('ça marche mdr', 'Produit ajouté au panier');
+        $this->addFlash('success', 'Produit ajouté au panier');
 
         return $this->redirectToRoute('app_cart');
     }
-
 
     #[Route('/cart/remove/{cartContentId}', name: 'app_cart_remove')]
     public function remove(EntityManagerInterface $em, int $cartContentId): Response
@@ -119,6 +118,8 @@ class CartController extends AbstractController
         $em->remove($cartContent);
         $em->flush();
 
+        $this->addFlash('success', 'Produit retiré du panier');
+
         return $this->redirectToRoute('app_cart');
     }
 
@@ -137,7 +138,6 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('Cart content not found');
         }
 
-        // Check if the cart content belongs to the user's cart
         $cart = $cartContent->getCart();
         if ($cart->getUserId()->getId() !== $user->getId()) {
             throw $this->createAccessDeniedException('You do not have permission to update this item');
@@ -147,6 +147,8 @@ class CartController extends AbstractController
 
         $em->persist($cartContent);
         $em->flush();
+
+        $this->addFlash('success', 'Quantité augmentée');
 
         return $this->redirectToRoute('app_cart');
     }
@@ -177,6 +179,8 @@ class CartController extends AbstractController
         $em->persist($cartContent);
         $em->flush();
 
+        $this->addFlash('success', 'Quantité diminuée');
+
         return $this->redirectToRoute('app_cart');
     }
 
@@ -202,6 +206,8 @@ class CartController extends AbstractController
         $cart->setPurchaseDate(new \DateTime());
         $em->persist($cart);
         $em->flush();
+
+        $this->addFlash('success', 'Commande validée');
 
         return $this->redirectToRoute('app_cart');
     }
