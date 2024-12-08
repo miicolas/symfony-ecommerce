@@ -68,6 +68,12 @@
                                 Ajouter au panier
                             </button>
                         {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form action="{{ path('app_product_delete', {id: product.id}) }}" method="post">
+                                <input type="hidden" name="csrf" value="{{ csrf_token('delete' ~ product.id) }}">
+                                <input type="submit" value="Delete">
+                            </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>

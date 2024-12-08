@@ -61,5 +61,40 @@ class ProductController extends AbstractController
         ]);
     }
 
+    #[Route('/product/delete/{id}', name: 'app_product_delete')]
+    public function delete(EntityManagerInterface $em, Request $request, int $id): Response
+    {
 
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        // Supprime le produit des paniers
+        $carts = $user->getCarts();
+        foreach ($carts as $cart) {
+            foreach ($cart->getCartContents() as $cartContent) {
+                if ($cartContent->getProduct()->getId() === $id) {
+                    $cart->removeCartContent($cartContent);
+                    $em->persist($cart);
+                    $em->flush();
+                }
+            }
+            if ($cart->getCartContents()->isEmpty()) {
+                $em->remove($cart);
+                $em->flush();
+            }
+        }
+
+        $product = $em->getRepository(Product::class)->find($id);
+
+
+        if (!$product) {
+            throw $this->createNotFoundException('Product not found');
+        }
+        $em->remove($product);
+        $em->flush();
+        return $this->redirectToRoute('app_product');
+    }
 }
