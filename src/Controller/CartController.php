@@ -135,12 +135,12 @@ class CartController extends AbstractController
         $cartContent = $em->getRepository(CartContent::class)->find($cartContentId);
 
         if (!$cartContent) {
-            throw $this->createNotFoundException('Cart content not found');
+            throw $this->createNotFoundException('Panier introuvable');
         }
 
         $cart = $cartContent->getCart();
         if ($cart->getUserId()->getId() !== $user->getId()) {
-            throw $this->createAccessDeniedException('You do not have permission to update this item');
+            throw $this->createAccessDeniedException('Tu n\'as pas la permission de modifier cet article');
         }
 
         $cartContent->setQuantity($cartContent->getQuantity() + 1);
@@ -201,7 +201,24 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('Cart not found');
         }
 
+        // Check if there is enough stock for each product in the cart
+        foreach ($cart->getCartContents() as $cartContent) {
+            $product = $cartContent->getProduct();
+            if ($product->getStock() < $cartContent->getQuantity()) {
+                $this->addFlash('error', 'Not enough stock for product: ' . $product->getName());
+                return $this->redirectToRoute('app_cart');
+            }
+        }
+
+        // Deduct the stock for each product in the cart
+        foreach ($cart->getCartContents() as $cartContent) {
+            $product = $cartContent->getProduct();
+            $product->setStock($product->getStock() - $cartContent->getQuantity());
+            $em->persist($product);
+        }
+
         $cart->setPaid(true);
+
         $cart->setAmountPaid($cart->getTotal());
         $cart->setPurchaseDate(new \DateTime());
         $em->persist($cart);

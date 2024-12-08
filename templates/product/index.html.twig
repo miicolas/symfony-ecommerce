@@ -18,7 +18,7 @@
                             {# Image du produit (si disponible) #}
                             <div class="aspect-square bg-slate-100">
                                 {% if p.photo is defined and p.photo %}
-                                    <img src="{{ p.photo }}?random={{ p.id }}" alt="{{ p.name }}"
+                                    <img src="{{ asset('uploads/' ~ p.photo) }}" alt="{{ p.name }}"
                                          class="w-full h-full object-cover">
                                 {% else %}
                                     <div class="w-full h-full flex items-center justify-center text-slate-400">
@@ -59,7 +59,12 @@
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="mt-12 bg-white rounded-xl shadow-sm p-8">
                     <h2 class="text-xl font-medium text-slate-900 mb-6">Ajouter un produit</h2>
-                    {# {{ form(ajout_produit) }} #}
+
+
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+
                 </div>
             {% endif %}
         </div>

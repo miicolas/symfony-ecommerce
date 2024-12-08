@@ -16,7 +16,7 @@
                     {# Image du produit (si disponible) #}
                     <div class="aspect-square bg-slate-100 rounded-lg flex items-center justify-center">
                         {% if product.photo is defined and product.photo %}
-                            <img src="{{ product.photo }}" alt="{{ product.name }}"
+                            <img src="{{ asset('uploads/' ~ product.photo) }}?random={{ random() }}"
                                  class="object-cover w-full h-full rounded-lg">
                         {% else %}
                             <span class="text-slate-400">Aucune image disponible</span>
