@@ -1,0 +1,7 @@
+# translations/messages.fr.yaml
+welcome: "Bienvenue"
+shopit: "ShopIt"
+logout: "Déconnexion"
+login: "Connexion"
+success: "Succès"
+error: "Erreur"
