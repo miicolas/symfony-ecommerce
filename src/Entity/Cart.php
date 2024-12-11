@@ -69,6 +69,11 @@ class Cart
         return $this;
     }
 
+    public function hasContent(): bool
+    {
+        return !$this->cartContents->isEmpty();
+    }
+
     /**
      * @return Collection<int, CartContent>
      */
