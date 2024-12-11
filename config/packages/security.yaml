@@ -27,8 +27,8 @@ security:
   access_control:
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/register, roles: PUBLIC_ACCESS }
-    - { path: ^/, roles: ROLE_USER }
     - { path: ^/admin, roles: ROLE_SUPER_ADMIN }
+    - { path: ^/, roles: ROLE_USER }
 
 parameters:
-  upload_directory: '%kernel.project_dir%/public/uploads'
+  upload_directory: "%kernel.project_dir%/public/uploads"
