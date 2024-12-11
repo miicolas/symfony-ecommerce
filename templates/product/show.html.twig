@@ -1,7 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-   Product name: {{ product.name }}
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white rounded-xl shadow-sm p-8">
+            <div class="space-y-6">
+                {# En-tête du produit #}
+                <div class="border-b border-slate-200 pb-6">
+                    <h1 class="text-3xl font-light text-slate-900">{{ product.name }}</h1>
+                </div>
+
+                {# Contenu principal #}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {# Image du produit (si disponible) #}
+                    <div class="aspect-square bg-slate-100 rounded-lg flex items-center justify-center">
+                        {% if product.photo is defined and product.photo %}
+                            <img src="{{ asset('uploads/' ~ product.photo) }}?random={{ random() }}"
+                                 class="object-cover w-full h-full rounded-lg">
+                        {% else %}
+                            <span class="text-slate-400">Aucune image disponible</span>
+                        {% endif %}
+                    </div>
+
+                    {# Détails du produit #}
+                    <div class="space-y-6">
+                        {% if product.description is defined %}
+                            <div>
+                                <h2 class="text-sm font-medium text-slate-700">Description</h2>
+                                <p class="mt-2 text-slate-600">{{ product.description }}</p>
+                            </div>
+                        {% endif %}
+
+                        {% if product.price is defined %}
+                            <div>
+                                <h2 class="text-sm font-medium text-slate-700">Prix</h2>
+                                <p class="mt-2 text-2xl text-slate-900">{{ product.price|number_format(2, ',', ' ') }}
+                                    €</p>
+                            </div>
+                        {% endif %}
+
+                        {% if product.stock is defined %}
+                            <div>
+                                <h2 class="text-sm font-medium text-slate-700">Stock</h2>
+                                <p class="mt-2 text-slate-600">
+                                    {% if product.stock > 9 %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            En stock ({{ product.stock }})
+                                        </span>
+                                    {% elseif product.stock > 0 %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                                                Bientôt épuisé ({{ product.stock }})
+                                            </span>
+                                    {% else %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                            Rupture de stock
+                                        </span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                        {# Bouton d'action (si nécessaire) #}
+                        {% if product.stock is not defined or product.stock > 0 %}
+                            <button class="w-full md:w-auto flex justify-center py-2.5 px-8 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200"
+                                    onclick="window.location.href='{{ path('app_cart_add', {productId: product.id}) }}'">
+                                Ajouter au panier
+                            </button>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <form action="{{ path('app_product_delete', {id: product.id}) }}" method="post">
+                                <input type="hidden" name="csrf" value="{{ csrf_token('delete' ~ product.id) }}">
+                                <input type="submit" value="Delete">
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
