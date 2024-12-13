@@ -9,18 +9,20 @@ use App\Entity\Product;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\ProductType;
 use Symfony\Component\HttpFoundation\Request;
-
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'app_product')]
-    public function index(EntityManagerInterface $em, Request $request): Response
+    public function index(EntityManagerInterface $em, Request $request, TranslatorInterface $translator): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
 
@@ -33,13 +35,13 @@ class ProductController extends AbstractController
                         $newFilename
                     );
                 } catch (FileException $e) {
-                    $this->addFlash('error', 'Impossible de télécharger l\'image');
+                    $this->addFlash('error', $translator->trans('image-upload-error'));
                     return $this->redirectToRoute('app_product');
                 }
 
                 $product->setPhoto($newFilename);
             }
-            $this->addFlash('success', 'Produit ajouté avec succès');
+            $this->addFlash('success', $translator->trans('product-added-success'));
             $em->persist($product);
             $em->flush();
             return $this->redirectToRoute('app_product');
@@ -62,13 +64,12 @@ class ProductController extends AbstractController
     }
 
     #[Route('/product/delete/{id}', name: 'app_product_delete')]
-    public function delete(EntityManagerInterface $em, Request $request, int $id): Response
+    public function delete(EntityManagerInterface $em, Request $request, int $id, TranslatorInterface $translator): Response
     {
-
         /** @var User $user */
         $user = $this->getUser();
         if (!$user) {
-            throw $this->createNotFoundException('User not found');
+            throw $this->createNotFoundException($translator->trans('user-not-found'));
         }
 
         // Supprime le produit des paniers
@@ -89,9 +90,8 @@ class ProductController extends AbstractController
 
         $product = $em->getRepository(Product::class)->find($id);
 
-
         if (!$product) {
-            throw $this->createNotFoundException('Product not found');
+            throw $this->createNotFoundException($translator->trans('product-not-found'));
         }
         $em->remove($product);
         $em->flush();

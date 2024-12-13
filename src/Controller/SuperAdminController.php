@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\User;
 use App\Entity\Cart;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SuperAdminController extends AbstractController
 {
@@ -35,7 +36,7 @@ class SuperAdminController extends AbstractController
     }
 
     #[Route('/admin/toggle/admin/{userId}', name: 'app_admin_toggle_admin')]
-    public function toggleAdmin(EntityManagerInterface $em, int $userId): Response
+    public function toggleAdmin(EntityManagerInterface $em, int $userId, TranslatorInterface $translator): Response
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
@@ -43,7 +44,7 @@ class SuperAdminController extends AbstractController
 
         $targetUser = $em->getRepository(User::class)->find($userId);
         if (!$targetUser) {
-            $this->addFlash('error', 'Utilisateur non trouvé');
+            $this->addFlash('error', $translator->trans('user-not-found'));
             return $this->redirectToRoute('app_admin_index');
         }
 
@@ -61,7 +62,7 @@ class SuperAdminController extends AbstractController
     }
 
     #[Route('/admin/toggle/super/{userId}', name: 'app_admin_toggle_super')]
-    public function toggleSuper(EntityManagerInterface $em, int $userId): Response
+    public function toggleSuper(EntityManagerInterface $em, int $userId, TranslatorInterface $translator): Response
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
@@ -69,7 +70,7 @@ class SuperAdminController extends AbstractController
 
         $targetUser = $em->getRepository(User::class)->find($userId);
         if (!$targetUser) {
-            $this->addFlash('error', 'Utilisateur non trouvé');
+            $this->addFlash('error', $translator->trans('user-not-found'));
             return $this->redirectToRoute('app_admin_index');
         }
 

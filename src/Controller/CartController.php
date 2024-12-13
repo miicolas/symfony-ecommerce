@@ -10,6 +10,7 @@ use App\Entity\CartContent;
 use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CartController extends AbstractController
 {
@@ -41,7 +42,7 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart/add/{productId}', name: 'app_cart_add')]
-    public function add(EntityManagerInterface $em, int $productId): Response
+    public function add(EntityManagerInterface $em, int $productId, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -89,13 +90,13 @@ class CartController extends AbstractController
 
         $em->flush();
 
-        $this->addFlash('success', 'Produit ajouté au panier');
+        $this->addFlash('success', $translator->trans('product-added'));
 
         return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/cart/remove/{cartContentId}', name: 'app_cart_remove')]
-    public function remove(EntityManagerInterface $em, int $cartContentId): Response
+    public function remove(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -118,13 +119,13 @@ class CartController extends AbstractController
         $em->remove($cartContent);
         $em->flush();
 
-        $this->addFlash('success', 'Produit retiré du panier');
+        $this->addFlash('success', $translator->trans('product-removed'));
 
         return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/cart/increase/{cartContentId}', name: 'app_cart_increase')]
-    public function increase(EntityManagerInterface $em, int $cartContentId): Response
+    public function increase(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -135,12 +136,12 @@ class CartController extends AbstractController
         $cartContent = $em->getRepository(CartContent::class)->find($cartContentId);
 
         if (!$cartContent) {
-            throw $this->createNotFoundException('Panier introuvable');
+            throw $this->createNotFoundException('Cart content not found');
         }
 
         $cart = $cartContent->getCart();
         if ($cart->getUserId()->getId() !== $user->getId()) {
-            throw $this->createAccessDeniedException('Tu n\'as pas la permission de modifier cet article');
+            throw $this->createAccessDeniedException('You do not have permission to update this item');
         }
 
         $cartContent->setQuantity($cartContent->getQuantity() + 1);
@@ -148,13 +149,13 @@ class CartController extends AbstractController
         $em->persist($cartContent);
         $em->flush();
 
-        $this->addFlash('success', 'Quantité augmentée');
+        $this->addFlash('success', $translator->trans('quantity-increased'));
 
         return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/cart/decrease/{cartContentId}', name: 'app_cart_decrease')]
-    public function decrease(EntityManagerInterface $em, int $cartContentId): Response
+    public function decrease(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -179,13 +180,13 @@ class CartController extends AbstractController
         $em->persist($cartContent);
         $em->flush();
 
-        $this->addFlash('success', 'Quantité diminuée');
+        $this->addFlash('success', $translator->trans('quantity-decreased'));
 
         return $this->redirectToRoute('app_cart');
     }
 
     #[Route('/cart/checkout', name: 'app_cart_checkout')]
-    public function checkout(EntityManagerInterface $em): Response
+    public function checkout(EntityManagerInterface $em, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -205,7 +206,7 @@ class CartController extends AbstractController
         foreach ($cart->getCartContents() as $cartContent) {
             $product = $cartContent->getProduct();
             if ($product->getStock() < $cartContent->getQuantity()) {
-                $this->addFlash('error', 'Not enough stock for product: ' . $product->getName());
+                $this->addFlash('error', $translator->trans('not-enough-stock') . $product->getName());
                 return $this->redirectToRoute('app_cart');
             }
         }
@@ -218,13 +219,12 @@ class CartController extends AbstractController
         }
 
         $cart->setPaid(true);
-
         $cart->setAmountPaid($cart->getTotal());
         $cart->setPurchaseDate(new \DateTime());
         $em->persist($cart);
         $em->flush();
 
-        $this->addFlash('success', 'Commande validée');
+        $this->addFlash('success', $translator->trans('order-confirmed'));
 
         return $this->redirectToRoute('app_cart');
     }
