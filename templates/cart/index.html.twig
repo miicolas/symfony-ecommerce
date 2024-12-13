@@ -1,22 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Panier{% endblock %}
+{% block title %}{{ "my-cart" | trans }}{% endblock %}
 
 {% block body %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-3xl font-light text-slate-900 mb-8">Mon Panier</h1>
+        <h1 class="text-3xl font-light text-slate-900 mb-8">{{ "my-cart" | trans }}</h1>
 
         {% if cart.getCartContents()|length == 0 %}
             <div class="bg-white rounded-xl shadow-sm p-8 text-center">
                 <div class="text-slate-400 mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                     </svg>
                 </div>
-                <p class="text-slate-600 mb-4">Votre panier est vide</p>
+                <p class="text-slate-600 mb-4">{{ our-products-empty | trans }}</p>
                 <a href="{{ path('app_product') }}"
                    class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
-                    Continuer mes achats
+                    {{ 'continue-our-products' | trans }}
                 </a>
             </div>
         {% else %}
@@ -33,8 +35,10 @@
                                          class="w-full h-full object-cover rounded-lg">
                                 {% else %}
                                     <div class="w-full h-full flex items-center justify-center text-slate-400">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
+                                             viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                     </div>
                                 {% endif %}
@@ -48,19 +52,23 @@
 
                             {# total de la ligne #}
                             <div class="text-right w-24">
-                                <p class="text-slate-600">Sous-total: {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }} €</p>
+                                <p class="text-slate-600">
+                                    {{ 'subtotal' | trans }}: {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }}
+                                    €</p>
                             </div>
 
                             {# Quantité #}
                             <div class="flex align-middle items-center space-x-2">
-                                <form method="post" action="{{ path('app_cart_decrease', {cartContentId: item.id}) }}" class="flex items-center m-0">
+                                <form method="post" action="{{ path('app_cart_decrease', {cartContentId: item.id}) }}"
+                                      class="flex items-center m-0">
                                     <button type="submit" name="action" value="decrease"
                                             class="w-8 h-8 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50">
                                         -
                                     </button>
                                 </form>
-                                    <span class="w-12 text-center">{{ item.quantity }}</span>
-                                    <form method="post" action="{{ path('app_cart_increase', {cartContentId: item.id}) }}" class="flex items-center m-0">
+                                <span class="w-12 text-center">{{ item.quantity }}</span>
+                                <form method="post" action="{{ path('app_cart_increase', {cartContentId: item.id}) }}"
+                                      class="flex items-center m-0">
                                     <button type="submit" name="action" value="increase"
                                             class="w-8 h-8 flex items-center justify-center rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50">
                                         +
@@ -70,11 +78,14 @@
 
 
                             {# Bouton supprimer #}
-                            <form method="post" action="{{ path('app_cart_remove', {cartContentId: item.id}) }}" class="my-0">
+                            <form method="post" action="{{ path('app_cart_remove', {cartContentId: item.id}) }}"
+                                  class="my-0">
                                 <button type="submit"
                                         class="text-slate-400 hover:text-red-600 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                         viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                     </svg>
                                 </button>
                             </form>
@@ -85,7 +96,7 @@
                 {# Récapitulatif #}
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-                        <h2 class="text-lg font-medium text-slate-900 mb-4">Récapitulatif</h2>
+                        <h2 class="text-lg font-medium text-slate-900 mb-4">{{ 'checkout' | trans }}</h2>
 
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-slate-600">Total</span>
@@ -97,7 +108,7 @@
                             <form method="post" action="{{ path('app_cart_checkout') }}" class="mt-6">
                                 <button type="submit"
                                         class="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
-                                    Procéder au paiement
+                                    {{ 'payment-method' | trans }}
                                 </button>
                             </form>
                         </div>

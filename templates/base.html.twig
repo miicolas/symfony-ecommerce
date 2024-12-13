@@ -1,4 +1,5 @@
 <html>
+
 	<head>
 		<meta charset="UTF-8">
 		<title>
@@ -70,8 +71,21 @@ setTimeout(() => toast.remove(), 500);
 			</div>
 		</nav>
 
+
 		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4"> {% block body %}{% endblock %}
 			</div>
+
+
+<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="toast bg-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-100 border border-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-400 text-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-700 px-4 py-3 rounded relative mb-4 shadow-lg transition-opacity duration-300" role="alert">
+                <strong class="font-bold">{{ (label == "success" ? 'success' : (label == 'error' ? 'error' : label))|trans|capitalize }} !</strong>
+                <span class="block sm:inline">{{ message }}</span>
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
 
 			<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
 				{% for label, messages in app.flashes %}
@@ -84,6 +98,5 @@ setTimeout(() => toast.remove(), 500);
 					{% endfor %}
 				{% endfor %}
 			</div>
-
 		</body>
 	</html>
