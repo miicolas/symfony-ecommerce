@@ -1,24 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Compte{% endblock %}
+{% block title %}{{ "my-account" | trans }}{% endblock %}
 
 {% block body %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h1 class="text-3xl font-light text-slate-900 mb-8">Mon Compte</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {# Infos utilisateurs #}
+            {# Informations personnelles #}
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-                    <h2 class="text-lg font-medium text-slate-900 mb-4">Informations Personnelles</h2>
-
+                    <h2 class="text-lg font-medium text-slate-900 mb-4">{{ 'personal-information' | trans }}</h2>s
                     <div class="space-y-4">
                         <div>
-                            <label class="text-sm text-slate-600">Nom</label>
+                            <label class="text-sm text-slate-600">{{ 'name' | trans }}</label>
                             <p class="text-slate-900">{{ app.user.firstName }} {{ app.user.lastName }}</p>
                         </div>
                         <div>
-                            <label class="text-sm text-slate-600">Email</label>
+                            <label class="text-sm text-slate-600">{{ 'email' | trans }}</label>
                             <p class="text-slate-900">{{ app.user.email }}</p>
                         </div>
                     </div>
@@ -27,7 +26,7 @@
 
             {# Historique des paniers #}
             <div class="lg:col-span-2 space-y-4">
-                <h2 class="text-xl font-medium text-slate-900 mb-4">Mes Paniers</h2>
+                <h2 class="text-xl font-medium text-slate-900 mb-4">{{ 'my-cart' | trans }}</h2>
 
                 {% if carts is empty %}
                     <div class="bg-white rounded-xl shadow-sm p-8 text-center">
@@ -38,10 +37,10 @@
                                       d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                             </svg>
                         </div>
-                        <p class="text-slate-600 mb-4">Vous n'avez pas encore de panier</p>
+                        <p class="text-slate-600 mb-4">{{ 'our-products-empty' | trans }}</p>
                         <a href="{{ path('app_product') }}"
                            class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
-                            Découvrir nos produits
+                            {{ 'cart-discover' | trans }}
                         </a>
                     </div>
                 {% else %}

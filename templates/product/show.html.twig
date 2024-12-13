@@ -19,7 +19,7 @@
                             <img src="{{ asset('uploads/' ~ product.photo) }}?random={{ random() }}"
                                  class="object-cover w-full h-full rounded-lg">
                         {% else %}
-                            <span class="text-slate-400">Aucune image disponible</span>
+                            <span class="text-slate-400">{{ "no-image" | trans }}</span>
                         {% endif %}
                     </div>
 
@@ -27,14 +27,14 @@
                     <div class="space-y-6">
                         {% if product.description is defined %}
                             <div>
-                                <h2 class="text-sm font-medium text-slate-700">Description</h2>
+                                <h2 class="text-sm font-medium text-slate-700">{{ "product-description" | trans }}</h2>
                                 <p class="mt-2 text-slate-600">{{ product.description }}</p>
                             </div>
                         {% endif %}
 
                         {% if product.price is defined %}
                             <div>
-                                <h2 class="text-sm font-medium text-slate-700">Prix</h2>
+                                <h2 class="text-sm font-medium text-slate-700">{{ "product-price" | trans }}</h2>
                                 <p class="mt-2 text-2xl text-slate-900">{{ product.price|number_format(2, ',', ' ') }}
                                     €</p>
                             </div>
@@ -42,19 +42,19 @@
 
                         {% if product.stock is defined %}
                             <div>
-                                <h2 class="text-sm font-medium text-slate-700">Stock</h2>
+                                <h2 class="text-sm font-medium text-slate-700">{{ "product-stock" | trans }}</h2>
                                 <p class="mt-2 text-slate-600">
                                     {% if product.stock > 9 %}
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            En stock ({{ product.stock }})
+                                            {{ "in-stock" | trans }} ({{ product.stock }})
                                         </span>
                                     {% elseif product.stock > 0 %}
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                                Bientôt épuisé ({{ product.stock }})
+                                                {{ "soon-out-of-stock" | trans }} ({{ product.stock }})
                                             </span>
                                     {% else %}
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                            Rupture de stock
+                                            {{ 'out-of-stock' | trans }}
                                         </span>
                                     {% endif %}
                                 </p>
@@ -65,7 +65,7 @@
                         {% if product.stock is not defined or product.stock > 0 %}
                             <button class="w-full md:w-auto flex justify-center py-2.5 px-8 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200"
                                     onclick="window.location.href='{{ path('app_cart_add', {productId: product.id}) }}'">
-                                Ajouter au panier
+                                {{ "add-to-cart" | trans }}
                             </button>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') %}

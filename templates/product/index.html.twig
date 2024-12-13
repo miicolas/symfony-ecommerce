@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nos Produits{% endblock %}
+{% block title %}{{ "products" | trans }}{% endblock %}
 
 {% block body %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="space-y-8">
             {# En-tête de la page #}
             <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-light text-slate-900">Nos Produits</h1>
+                <h1 class="text-3xl font-light text-slate-900">{{ "products" | trans }}</h1>
             </div>
 
             {# Liste des produits #}
@@ -38,7 +38,7 @@
 
                                 <a href="{{ path('app_product_show', {id: p.id}) }}"
                                    class="inline-flex w-full items-center justify-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
-                                    Voir le détail
+                                    {{ 'see-details' | trans }}
                                 </a>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                         </svg>
                     </div>
-                    <p class="text-slate-600">Aucun produit disponible pour le moment</p>
+                    <p class="text-slate-600">{{ 'no-products'| trans }}</p>
                 </div>
             {% endif %}
 
