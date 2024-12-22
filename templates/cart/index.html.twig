@@ -23,7 +23,7 @@
             </div>
         {% else %}
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {# Liste des produits #}
+                {# List of products #}
                 <div class="lg:col-span-2 space-y-4">
                     {% for item in cart.getCartContents() %}
                         <div class="bg-white rounded-xl shadow-sm p-4 flex items-center space-x-4">
@@ -44,20 +44,20 @@
                                 {% endif %}
                             </div>
 
-                            {# Informations produit #}
+                            {# Products Infos #}
                             <div class="flex-1">
                                 <h3 class="text-lg font-medium text-slate-900">{{ item.product.name }}</h3>
                                 <p class="text-slate-600">{{ item.product.price|number_format(2, ',', ' ') }} €</p>
                             </div>
 
-                            {# total de la ligne #}
+                            {# Lines Total #}
                             <div class="text-right w-24">
                                 <p class="text-slate-600">
                                     {{ 'subtotal' | trans }}: {{ (item.product.price * item.quantity)|number_format(2, ',', ' ') }}
                                     €</p>
                             </div>
 
-                            {# Quantité #}
+                            {# Quantity #}
                             <div class="flex align-middle items-center space-x-2">
                                 <form method="post" action="{{ path('app_cart_decrease', {cartContentId: item.id}) }}"
                                       class="flex items-center m-0">
@@ -77,7 +77,7 @@
                             </div>
 
 
-                            {# Bouton supprimer #}
+                            {# Delete Button #}
                             <form method="post" action="{{ path('app_cart_remove', {cartContentId: item.id}) }}"
                                   class="my-0">
                                 <button type="submit"
@@ -93,7 +93,7 @@
                     {% endfor %}
                 </div>
 
-                {# Récapitulatif #}
+                {# Summary #}
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
                         <h2 class="text-lg font-medium text-slate-900 mb-4">{{ 'checkout' | trans }}</h2>

@@ -15,6 +15,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ProductController extends AbstractController
 {
+
+    // Product page with the list of products
     #[Route('/', name: 'app_product')]
     public function index(EntityManagerInterface $em, Request $request, TranslatorInterface $translator): Response
     {
@@ -25,7 +27,6 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageFile */
             $imageFile = $form->get('image')->getData();
-
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
 
@@ -54,6 +55,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+    // Show a product
     #[Route('/product/{id}', name: 'app_product_show')]
     public function show(EntityManagerInterface $em, Product $product): Response
     {
@@ -63,6 +65,7 @@ class ProductController extends AbstractController
         ]);
     }
 
+    // Edit a product
     #[Route('/product/delete/{id}', name: 'app_product_delete')]
     public function delete(EntityManagerInterface $em, Request $request, int $id, TranslatorInterface $translator): Response
     {

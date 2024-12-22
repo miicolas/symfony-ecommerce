@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Paniers
+{% block title %} {{ 'cart-waiting-payment' | trans }}
 {% endblock %}
 
 {% block body %}
 	<div class="container mx-auto px-4 py-8">
-		<h1 class="text-3xl font-bold mb-6">Liste des paniers en attente de paiement</h1>
+		<h1 class="text-3xl font-bold mb-6">{{ 'cart-waiting-payment' | trans }}</h1>
 
 		<div class="bg-white shadow-md rounded-lg overflow-hidden">
+			{# Table of users  #}
 			<table class="min-w-full">
 				<thead class="bg-gray-50">
 					<tr>

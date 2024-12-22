@@ -1,25 +1,25 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}Nos Produits
+{% block title %}{{ 'products' | trans }}
 {% endblock %}
 
 {% block body %}
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 		<div
 			class="space-y-8">
-			{# En-tête de la page #}
+			{# Header #}
 			<div class="flex justify-between items-center">
-				<h1 class="text-3xl font-light text-slate-900">Nos Produits</h1>
+				<h1 class="text-3xl font-light text-slate-900">{{ 'products' | trans }}</h1>
 			</div>
 
-			{# Liste des produits #}
+			{# List of products #}
 			{% if products|length > 0 %}
 				<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 					{% for p in products %}
 						<div
 							class="group bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-							{# Image du produit (si disponible) #}
+							{# Product image (if available) #}
 							<div class="aspect-square bg-slate-100">
 								{% if p.photo is defined and p.photo %}
 									<img src="{{ asset('uploads/' ~ p.photo) }}" alt="{{ p.name }}" class="w-full h-full object-cover">
@@ -41,7 +41,7 @@
 								{% endif %}
 
 								<a href="{{ path('app_product_show', {id: p.id}) }}" class="inline-flex w-full items-center justify-center px-4 py-2 border border-slate-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-all duration-200">
-									Voir le détail
+									{{ 'product-details' | trans }}
 								</a>
 							</div>
 						</div>
@@ -54,15 +54,14 @@
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
 						</svg>
 					</div>
-					<p class="text-slate-600">Aucun produit disponible pour le moment</p>
+					<p class="text-slate-600">{{ 'product-unavailable' | trans }}</p>
 				</div>
 			{% endif %}
 
-			{# Formulaire d'ajout de produit pour les admins #}
+			{# Admin form to add product #}
 			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 				<div class="mt-12 bg-white rounded-xl shadow-sm p-8">
-					<h2 class="text-xl font-medium text-slate-900 mb-6">Ajouter un produit</h2>
-
+					<h2 class="text-xl font-medium text-slate-900 mb-6">{{ 'add-to-cart' | trans }}</h2>
 
 					{{ form_start(form) }}
 					{{ form_widget(form) }}

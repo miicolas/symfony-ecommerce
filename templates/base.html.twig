@@ -1,102 +1,86 @@
 <html>
+<head>
+	<meta charset="UTF-8">
+	<title>
+		{% block title %}{{ 'welcome' | trans }}{% endblock %}
+	</title>
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+	{% block stylesheets %}
+		<script src="https://cdn.tailwindcss.com"></script>
+	{% endblock %}
 
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Welcome!
-			{% endblock %}
-		</title>
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-		{% block stylesheets %}
-			<script src="https://cdn.tailwindcss.com"></script>
+	{% block javascripts %}
+		{% block importmap %}
+			{{ importmap('app') }}
 		{% endblock %}
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const toasts = document.querySelectorAll('.toast');
+				toasts.forEach(toast => {
+					setTimeout(() => {
+						toast.classList.add('opacity-0');
+						setTimeout(() => toast.remove(), 500);
+					}, 3000);
+				});
+			});
+		</script>
+	{% endblock %}
+</head>
+<body class="bg-slate-50 min-h-screen font-sans">
+<nav class="bg-white border-b border-slate-200">
+	<div class="flex justify-between max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 items-center">
+		<a href="{{ path('app_product') }}">
+			<h1 class="flex h-16 items-center space-x-8 text-xl font-bold">{{ 'shopit' | trans }}</h1>
+		</a>
+		<ul class="flex h-16 items-center space-x-8">
+			{% if app.user is not null %}
+				<li class="text-slate-600">
+					{{ 'welcome' | trans }}
+					<a href="{{ path('app_account') }}">
+						<span class="text-slate-900">{{ app.user.firstName }} {{ app.user.lastName }}</span>
+					</a>
+				</li>
+				{% if is_granted('ROLE_SUPER_ADMIN') %}
+					<li>
+						<a href="{{ path('app_admin_index') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+							{{ 'list-users' | trans }}
+						</a>
+					</li>
+					<li>
+						<a href="{{ path('app_admin_carts') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+							{{ 'cart-waiting-payment' | trans }}
+						</a>
+					</li>
+				{% endif %}
+				<li>
+					<a href="{{ path('app_logout') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+						{{ 'logout' | trans }}
+					</a>
+				</li>
+			{% else %}
+				<li>
+					<a href="{{ path('app_login') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+						{{ 'login' | trans }}
+					</a>
+				</li>
+			{% endif %}
+		</ul>
+	</div>
+</nav>
 
-		{% block javascripts %}
-			{% block importmap %}
-				{{ importmap('app') }}
-			{% endblock %}
-			<script>
-				document.addEventListener('DOMContentLoaded', function () {
-const toasts = document.querySelectorAll('.toast');
-toasts.forEach(toast => {
-setTimeout(() => {
-toast.classList.add('opacity-0');
-setTimeout(() => toast.remove(), 500);
-}, 3000);
-});
-});
-			</script>
-		{% endblock %}
-	</head>
-	<body class="bg-slate-50 min-h-screen font-sans">
-		<nav class="bg-white border-b border-slate-200">
-			<div class="flex justify-between max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 items-center">
-				<a href="{{ path('app_product')}}">
-					<h1 class="flex h-16 items-center space-x-8 text-xl font-bold">ShopIt</h1>
-				</a>
-				<ul class="flex h-16 items-center space-x-8">
-					{% if app.user is not null %}
-						<li class="text-slate-600">
-							Bienvenue
-							<a href="{{ path('app_account')}}">
-								<span class="text-slate-900">{{ app.user.firstName }}
-									{{ app.user.lastName }}</span>
-							</a>
-						</li>
-						{% if is_granted('ROLE_SUPER_ADMIN') %}
-							<li>
-								<a href="{{ path('app_admin_index') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
-									Utilisateurs
-								</a>
-							</li>
-							<li>
-								<a href="{{ path('app_admin_carts') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
-									Paniers en attente
-								</a>
-							</li>
-						{% endif %}
-						<li>
-							<a href="{{ path('app_logout') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
-								Déconnexion
-							</a>
-						</li>
-					{% else %}
-						<li>
-							<a href="{{ path('app_login') }}" class="text-slate-600 hover:text-slate-900 transition-colors duration-200">
-								Connexion
-							</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
-
-
-		<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4"> {% block body %}{% endblock %}
-			</div>
-
-
-<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="toast bg-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-100 border border-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-400 text-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-700 px-4 py-3 rounded relative mb-4 shadow-lg transition-opacity duration-300" role="alert">
-                <strong class="font-bold">{{ (label == "success" ? 'success' : (label == 'error' ? 'error' : label))|trans|capitalize }} !</strong>
-                <span class="block sm:inline">{{ message }}</span>
-            </div>
-        {% endfor %}
-    {% endfor %}
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+	{% block body %}{% endblock %}
 </div>
 
-			<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
-				{% for label, messages in app.flashes %}
-					{% for message in messages %}
-						<div class="toast bg-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-100 border border-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-400 text-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-700 px-4 py-3 rounded relative mb-4 shadow-lg transition-opacity duration-300" role="alert">
-							<strong class="font-bold">{{ (label == "success" ? 'Succès' : (label == 'error' ? 'Erreur' : label))|capitalize }}
-								!</strong>
-							<span class="block sm:inline">{{ message }}</span>
-						</div>
-					{% endfor %}
-				{% endfor %}
+<div class="fixed top-4 left-1/2 -translate-x-1/2 space-y-4">
+	{% for label, messages in app.flashes %}
+		{% for message in messages %}
+			<div class="toast bg-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-100 border border-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-400 text-{{ label == 'success' ? 'green' : (label == 'error' ? 'red' : 'blue') }}-700 px-4 py-3 rounded relative mb-4 shadow-lg transition-opacity duration-300" role="alert">
+				<strong class="font-bold">{{ (label == "success" ? 'success' : (label == 'error' ? 'error' : label))|trans|capitalize }}!</strong>
+				<span class="block sm:inline">{{ message }}</span>
 			</div>
-		</body>
-	</html>
+		{% endfor %}
+	{% endfor %}
+</div>
+</body>
+</html>

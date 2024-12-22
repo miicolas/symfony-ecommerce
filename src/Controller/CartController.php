@@ -14,6 +14,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CartController extends AbstractController
 {
+
+    // Cart page with the products in the cart
     #[Route('/cart', name: 'app_cart')]
     public function index(EntityManagerInterface $em): Response
     {
@@ -23,7 +25,7 @@ class CartController extends AbstractController
         if (!$user) {
             throw $this->createNotFoundException('User not found');
         }
-
+        // Get the cart of the current user
         $cart = $em->getRepository(Cart::class)->findOneBy(
             ['user_id' => $user->getId(), 'is_paid' => false]
         );
@@ -41,6 +43,7 @@ class CartController extends AbstractController
         ]);
     }
 
+    // Add a product to the cart
     #[Route('/cart/add/{productId}', name: 'app_cart_add')]
     public function add(EntityManagerInterface $em, int $productId, TranslatorInterface $translator): Response
     {
@@ -51,12 +54,14 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
+        // Get the product
         $product = $em->getRepository(Product::class)->find($productId);
 
         if (!$product) {
             throw $this->createNotFoundException('Product not found');
         }
 
+        // Get the cart of the current user
         $cart = $em->getRepository(Cart::class)->findOneBy(
             ['user_id' => $user->getId(), 'is_paid' => false]
         );
@@ -95,6 +100,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
 
+    // Remove a product from the cart
     #[Route('/cart/remove/{cartContentId}', name: 'app_cart_remove')]
     public function remove(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
@@ -104,6 +110,7 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
+        // Get the cart content
         $cartContent = $em->getRepository(CartContent::class)->find($cartContentId);
 
         if (!$cartContent) {
@@ -124,6 +131,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
 
+    // Increase the quantity of a product in the cart
     #[Route('/cart/increase/{cartContentId}', name: 'app_cart_increase')]
     public function increase(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
@@ -154,6 +162,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
 
+    // Decrease the quantity of a product in the cart
     #[Route('/cart/decrease/{cartContentId}', name: 'app_cart_decrease')]
     public function decrease(EntityManagerInterface $em, int $cartContentId, TranslatorInterface $translator): Response
     {
@@ -163,6 +172,7 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
+        // Get the cart content
         $cartContent = $em->getRepository(CartContent::class)->find($cartContentId);
 
         if (!$cartContent) {
@@ -185,6 +195,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('app_cart');
     }
 
+    // Checkout the cart
     #[Route('/cart/checkout', name: 'app_cart_checkout')]
     public function checkout(EntityManagerInterface $em, TranslatorInterface $translator): Response
     {
@@ -194,6 +205,7 @@ class CartController extends AbstractController
             throw $this->createNotFoundException('User not found');
         }
 
+        // Get the cart of the current user
         $cart = $em->getRepository(Cart::class)->findOneBy(
             ['user_id' => $user->getId(), 'is_paid' => false]
         );

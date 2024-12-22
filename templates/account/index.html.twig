@@ -4,10 +4,10 @@
 
 {% block body %}
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 class="text-3xl font-light text-slate-900 mb-8">Mon Compte</h1>
+        <h1 class="text-3xl font-light text-slate-900 mb-8">{{ 'my-account' | trans }}</h1>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {# Informations personnelles #}
+            {# Personal Data #}
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-xl shadow-sm p-6 sticky top-4">
                     <h2 class="text-lg font-medium text-slate-900 mb-4">{{ 'personal-information' | trans }}</h2>s
@@ -24,7 +24,7 @@
                 </div>
             </div>
 
-            {# Historique des paniers #}
+            {# Cart History #}
             <div class="lg:col-span-2 space-y-4">
                 <h2 class="text-xl font-medium text-slate-900 mb-4">{{ 'my-cart' | trans }}</h2>
 
