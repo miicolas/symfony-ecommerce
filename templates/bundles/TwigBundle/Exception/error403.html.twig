@@ -1,12 +1,11 @@
-{# templates/bundles/TwigBundle/Exception/error403.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Accès Refusé (403){% endblock %}
+{% block title %}{{ 'error'|trans }} 403{% endblock %}
 
 {% block body %}
     <div class="container mx-auto px-4 py-8 min-h-[80vh] flex items-center justify-center">
         <div class="max-w-lg w-full text-center">
-            {# Icône #}
+            {# Icon #}
             <div class="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-red-100 mb-6">
                 <svg class="h-12 w-12 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -15,26 +14,25 @@
                 </svg>
             </div>
 
-            {# Code d'erreur #}
+            {# Error code #}
             <h1 class="text-8xl font-bold text-red-600 mb-4">403</h1>
 
-            {# Message principal #}
+            {# Main message #}
             <div class="bg-white shadow-md rounded-lg overflow-hidden p-6 mb-6">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">Accès Refusé</h2>
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">{{ 'access-denied'|trans }}</h2>
 
                 <p class="text-gray-600 mb-6">
                     {% if exception.message %}
                         {{ exception.message }}
                     {% else %}
-                        Désolé, vous n'avez pas les permissions nécessaires pour accéder à cette page.
-                        Si vous pensez qu'il s'agit d'une erreur, veuillez contacter l'administrateur.
+                        {{ 'access-denied-message'|trans }}
                     {% endif %}
                 </p>
 
-                {# Bouton de retour #}
+                {# Back button #}
                 <a href="{{ path('app_home') }}"
                    class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-200">
-                    Retour à l'accueil
+                    {{ 'back-to-home'|trans }}
                 </a>
             </div>
         </div>
